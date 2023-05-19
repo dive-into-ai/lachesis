@@ -165,3 +165,4 @@ saved/
 data/
 .idea/
 *.lock
+wandb/
