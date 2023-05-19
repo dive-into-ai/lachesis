@@ -9,6 +9,9 @@ import model.model as module_arch
 from parse_config import ConfigParser
 from trainer import Trainer
 from utils import prepare_device
+import wandb
+import datetime
+import json
 
 
 # fix random seeds for reproducibility
@@ -28,6 +31,12 @@ def main(config):
     # build model architecture, then print to console
     model = config.init_obj('arch', module_arch)
     logger.info(model)
+
+    wandb.init(project='lachesis',
+               name = config['name'] + '_' + datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'),
+               config=config)
+    # wandb 로깅
+    wandb.watch(model)
 
     # prepare for (multi-device) GPU training
     device, device_ids = prepare_device(config['n_gpu'])
@@ -54,6 +63,10 @@ def main(config):
     trainer.train()
 
 
+    # wandb 로깅
+    wandb.finish()
+
+
 if __name__ == '__main__':
     args = argparse.ArgumentParser(description='PyTorch Template')
     args.add_argument('-c', '--config', default=None, type=str,
@@ -69,5 +82,6 @@ if __name__ == '__main__':
         CustomArgs(['--lr', '--learning_rate'], type=float, target='optimizer;args;lr'),
         CustomArgs(['--bs', '--batch_size'], type=int, target='data_loader;args;batch_size')
     ]
+
     config = ConfigParser.from_args(args, options)
     main(config)
