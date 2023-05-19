@@ -166,3 +166,4 @@ data/
 .idea/
 *.lock
 wandb/
+*.idea
