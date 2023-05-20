@@ -123,7 +123,7 @@ class Trainer(BaseTrainer):
         :param batch_idx:
         :return:
         '''
-        base = '[{}/{} ({:.0f}%) 윤진아 힘내자]'
+        base = '[{}/{} ({:.0f}%)]'
         if hasattr(self.data_loader, 'n_samples'):
             current = batch_idx * self.data_loader.batch_size
             total = self.data_loader.n_samples
