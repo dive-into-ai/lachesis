@@ -3,7 +3,7 @@ import torch
 from torchvision.utils import make_grid
 from base import BaseTrainer
 from utils import inf_loop, MetricTracker
-
+import wandb
 
 class Trainer(BaseTrainer):
     """
@@ -33,15 +33,22 @@ class Trainer(BaseTrainer):
     def _train_epoch(self, epoch):
         """
         Training logic for an epoch
+        - 추상 클래스 구현
+        - 에포크 학습 로직
 
         :param epoch: Integer, current training epoch.
         :return: A log that contains average loss and metric in this epoch.
         """
         self.model.train()
         self.train_metrics.reset()
+
         for batch_idx, (data, target) in enumerate(self.data_loader):
             data, target = data.to(self.device), target.to(self.device)
 
+
+            '''
+            핵심 코드 - 학습            
+            '''
             self.optimizer.zero_grad()
             output = self.model(data)
             loss = self.criterion(output, target)
@@ -53,6 +60,9 @@ class Trainer(BaseTrainer):
             for met in self.metric_ftns:
                 self.train_metrics.update(met.__name__, met(output, target))
 
+                wandb.log({met.__name__: met(output, target)})
+
+
             if batch_idx % self.log_step == 0:
                 self.logger.debug('Train Epoch: {} {} Loss: {:.6f}'.format(
                     epoch,
@@ -60,13 +70,16 @@ class Trainer(BaseTrainer):
                     loss.item()))
                 self.writer.add_image('input', make_grid(data.cpu(), nrow=8, normalize=True))
 
+                wandb.log({'loss_value': loss.item()})
+
+
             if batch_idx == self.len_epoch:
                 break
         log = self.train_metrics.result()
 
         if self.do_validation:
             val_log = self._valid_epoch(epoch)
-            log.update(**{'val_'+k : v for k, v in val_log.items()})
+            log.update(**{'val_' + k: v for k, v in val_log.items()})
 
         if self.lr_scheduler is not None:
             self.lr_scheduler.step()
@@ -75,12 +88,16 @@ class Trainer(BaseTrainer):
     def _valid_epoch(self, epoch):
         """
         Validate after training an epoch
+        - 에포크 학습 후 검증
 
         :param epoch: Integer, current training epoch.
         :return: A log that contains information about validation
         """
         self.model.eval()
         self.valid_metrics.reset()
+
+
+        # no gradient calculation
         with torch.no_grad():
             for batch_idx, (data, target) in enumerate(self.valid_data_loader):
                 data, target = data.to(self.device), target.to(self.device)
@@ -99,8 +116,14 @@ class Trainer(BaseTrainer):
             self.writer.add_histogram(name, p, bins='auto')
         return self.valid_metrics.result()
 
+
     def _progress(self, batch_idx):
-        base = '[{}/{} ({:.0f}%)]'
+        '''
+        보여주기 위한 프로그래스 바
+        :param batch_idx:
+        :return:
+        '''
+        base = '[{}/{} ({:.0f}%) 윤진아 힘내자]'
         if hasattr(self.data_loader, 'n_samples'):
             current = batch_idx * self.data_loader.batch_size
             total = self.data_loader.n_samples

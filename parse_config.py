@@ -11,6 +11,7 @@ from utils import read_json, write_json
 class ConfigParser:
     def __init__(self, config, resume=None, modification=None, run_id=None):
         """
+        - config 파일 파싱
         class to parse configuration json file. Handles hyperparameters for training, initializations of modules, checkpoint saving
         and logging module.
         :param config: Dict containing configurations, hyperparameters for training. contents of `config.json` file for example.
@@ -133,6 +134,12 @@ class ConfigParser:
 
 # helper functions to update config dict with custom cli options
 def _update_config(config, modification):
+    '''
+    config 를 modification 으로 업데이트
+    :param config:
+    :param modification:
+    :return:
+    '''
     if modification is None:
         return config
 

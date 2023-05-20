@@ -2,6 +2,7 @@ import torch
 from abc import abstractmethod
 from numpy import inf
 from logger import TensorboardWriter
+import wandb
 
 
 class BaseTrainer:
@@ -49,6 +50,7 @@ class BaseTrainer:
     def _train_epoch(self, epoch):
         """
         Training logic for an epoch
+        BaseTrainer를 상속한 클래스에서 구현해야 함
 
         :param epoch: Current epoch number
         """
@@ -64,6 +66,7 @@ class BaseTrainer:
 
             # save logged informations into log dict
             log = {'epoch': epoch}
+            wandb.log({"epoch": epoch})
             log.update(result)
 
             # print logged informations to the screen
