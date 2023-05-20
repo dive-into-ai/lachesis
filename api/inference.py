@@ -1,6 +1,7 @@
 import torch
 from base import BaseModel
 
+
 # 학습된 모델 로드
 def load_model():
     model = BaseModel()  # 모델 클래스에 맞게 수정 필요
@@ -8,12 +9,14 @@ def load_model():
     model.eval()
     return model
 
+
 # 예측 수행
 def predict(model, input_data):
     with torch.no_grad():
         input_tensor = torch.tensor(input_data)
         predictions = model(input_tensor)
         return predictions.tolist()
+
 
 # 응답 생성
 def generate_response(model, user_input):

@@ -7,9 +7,11 @@ import torch.nn.functional as F
 from base import BaseModel
 
 
-'''
+"""
 이미지 분류 모델
-'''
+"""
+
+
 class MnistModel(BaseModel):
     def __init__(self, num_classes=10):
         super().__init__()
@@ -29,9 +31,11 @@ class MnistModel(BaseModel):
         return F.log_softmax(x, dim=1)
 
 
-'''
+"""
 Cifar10 데이터셋을 위한 모델
-'''
+"""
+
+
 class CifarModel(BaseModel):
     def __init__(self, num_classes=10):
         super().__init__()
@@ -54,9 +58,11 @@ class CifarModel(BaseModel):
         return F.log_softmax(x, dim=1)
 
 
-'''
+"""
 텍스트 유사도 분석 모델
-'''
+"""
+
+
 class TextSimilarityModel(BaseModel):
     def __init__(self, vocab_size, embedding_dim, hidden_dim, num_classes):
         super().__init__()
@@ -72,9 +78,11 @@ class TextSimilarityModel(BaseModel):
         return F.softmax(logits, dim=1)
 
 
-'''
+"""
 텍스트 생성 모델
-'''
+"""
+
+
 class TextGenerationModel(BaseModel):
     def __init__(self, vocab_size, embedding_dim, hidden_dim):
         super().__init__()

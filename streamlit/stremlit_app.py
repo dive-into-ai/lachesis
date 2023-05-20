@@ -12,6 +12,7 @@ def load_model():
     model.eval()
     return tokenizer, model
 
+
 # 응답 생성
 def generate_response(tokenizer, model, user_input, chat_history=None):
     if chat_history is None:
@@ -23,14 +24,23 @@ def generate_response(tokenizer, model, user_input, chat_history=None):
         inputs_tensor = torch.tensor([chat_history])
 
         # 다양하게 생성되도록
-        outputs = model.generate(inputs_tensor, max_length=50, pad_token_id=tokenizer.pad_token_id, temperature=1.0, do_sample=True, top_k=50, top_p=0.95, num_return_sequences=1)
+        outputs = model.generate(
+            inputs_tensor,
+            max_length=50,
+            pad_token_id=tokenizer.pad_token_id,
+            temperature=1.0,
+            do_sample=True,
+            top_k=50,
+            top_p=0.95,
+            num_return_sequences=1,
+        )
         response = tokenizer.decode(outputs[0], skip_special_tokens=True)
     return response, chat_history
+
 
 # 챗봇 대화 기능
 def chatbot(tokenizer, model):
     st.title("Chatbot")
-
 
     chat_history = []
     while True:
@@ -41,7 +51,9 @@ def chatbot(tokenizer, model):
             # 챗봇의 응답을 response 변수에 할당하세요
 
             chat_history.append(user_input)
-            response, chat_history = generate_response(tokenizer, model, user_input, chat_history)
+            response, chat_history = generate_response(
+                tokenizer, model, user_input, chat_history
+            )
             chat_history.append(tokenizer.encode(response, add_special_tokens=True))
 
             st.text_area("Chat History", "\n".join(chat_history))
@@ -55,7 +67,6 @@ def chatbot(tokenizer, model):
 
         if st.button("End Chat"):
             st.stop()
-
 
 
 # 메인 함수

@@ -22,6 +22,7 @@ def focal_loss(output, target, gamma=2, alpha=0.5):
     loss = -((1 - pt) ** gamma) * logpt
     return loss
 
+
 # label smoothing
 def label_smoothing(output, target, alpha=0.1):
     """
@@ -38,6 +39,7 @@ def label_smoothing(output, target, alpha=0.1):
     loss = -(one_hot * log_prb).sum(dim=1).mean()
     return loss
 
+
 def cross_entropy(output, target):
     """
     Cross Entropy
@@ -46,6 +48,7 @@ def cross_entropy(output, target):
     :return: loss
     """
     return F.cross_entropy(output, target)
+
 
 def mse_loss(output, target):
     """
@@ -56,6 +59,7 @@ def mse_loss(output, target):
     """
     return F.mse_loss(output, target)
 
+
 def bce_loss(output, target):
     """
     BCE Loss
@@ -64,6 +68,7 @@ def bce_loss(output, target):
     :return: loss
     """
     return F.binary_cross_entropy(output, target)
+
 
 def bce_with_logits_loss(output, target):
     """
@@ -74,6 +79,7 @@ def bce_with_logits_loss(output, target):
     """
     return F.binary_cross_entropy_with_logits(output, target)
 
+
 def l1_loss(output, target):
     """
     L1 Loss
@@ -83,6 +89,7 @@ def l1_loss(output, target):
     """
     return F.l1_loss(output, target)
 
+
 def l2_loss(output, target):
     """
     L2 Loss
@@ -91,6 +98,7 @@ def l2_loss(output, target):
     :return: loss
     """
     return F.mse_loss(output, target)
+
 
 def smooth_l1_loss(output, target):
     """
